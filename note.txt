@@ -1,0 +1,25 @@
+truy cap moi truong ao
+venv\Scripts\activate 
+
+chay project
+flask run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
