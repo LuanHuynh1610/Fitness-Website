@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Quản lý Admin</h1>
+
+    <!-- Nút thêm admin -->
+    <a href="{{ url_for('admin.add_admin') }}">
+        <button>Thêm Admin</button>
+    </a>
+
+    <br><br>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Hành động</th>
+        </tr>
+
+        {% for admin in admins %}
+        <tr>
+            <td>{{ admin.id }}</td>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.role }}</td>
+            <td>
+                
+                <a href="{{ url_for('admin.delete_admin', admin_id=admin.id) }}">
+                    <button style="background:red;color:white;">Xóa</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+
+</body>
+</ht

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Add</title>
+</head>
+<body>
+    <h1>Thêm tài khoản Admin mới</h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <label>Username</label><br>
+        {{ form.username(size=30) }}<br><br>
+
+        <label>Email</label><br>
+        {{ form.email(size=30) }}<br><br>
+
+        <label>Password</label><br>
+        {{ form.password(size=30) }}<br><br>
+
+        <label>Repeat Password</label><br>
+        {{ form.password2(size=30) }}<br><br>
+
+        {{ form.submit() }}
+    </form>
+
+    <br>
+    <a href="{{ url_for('admin.manage_admin') }}">Quay lại</a>
+
+
+</body>
+</html>

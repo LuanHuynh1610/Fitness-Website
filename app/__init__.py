@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 login = LoginManager()
 login.login_view = 'auth.login'
-
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -17,7 +16,9 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)  # <- dòng này giúp flask nhận lệnh 'db'
-
+    login.init_app(app)
+    
+    
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 

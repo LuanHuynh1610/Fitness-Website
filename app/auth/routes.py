@@ -3,43 +3,55 @@ from flask_login import login_user, logout_user, current_user, login_required
 from app.auth import bp
 from app import db
 from app.models import User
+from app.auth.forms import LoginForm, RegistrationForm
+
+
+
+
+
+
+
+
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        # ví dụ kiểm tra đơn giản (sau này thay bằng DB)
-        if username == 'admin' and password == '123':
-            return redirect(url_for('main.index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('auth.login'))
+        login_user(user, remember=form.remember_me.data)
+        # Redirect theo role
+        if user.role == "admin":
+            return redirect(url_for('admin.dashboard'))
+        elif user.role == "trainer":
+            return redirect(url_for('trainer.dashboard'))  
         else:
-            return render_template('login.html', message="Sai tài khoản hoặc mật khẩu!")
+            return redirect(url_for('main.dashboard')) 
+    return render_template('auth/login.html', form=form)
 
-    return render_template('auth/login.html')
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        # Lấy dữ liệu từ form
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
-
-        # Kiểm tra cơ bản
-        if password != confirm_password:
-            flash('Mật khẩu không khớp!')
-            return redirect(url_for('auth.register'))
-
-        # (Sau này sẽ thêm lưu vào database)
-        flash(f'Đăng ký thành công cho người dùng: {username}')
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # kiểm tra username/email bằng form validator đã chạy
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
         return redirect(url_for('auth.login'))
+    # nếu GET hoặc form lỗi, render lại form với lỗi hiển thị
+    return render_template('auth/register.html', form=form)
 
-    return render_template('auth/register.html')
 
 @bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+
+

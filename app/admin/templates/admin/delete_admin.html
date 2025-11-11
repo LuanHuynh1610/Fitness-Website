@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Xóa tài khoản admin</h1>
+
+    <p>Bạn có chắc muốn xóa admin: <strong>{{ admin.username }}</strong>?</p>
+
+    <form method="POST">
+        <button type="submit" style="background:red;color:white;">Xóa</button>
+        <a href="{{ url_for('admin.manage_admin') }}">
+            <button type="button">Hủy</button>
+        </a>
+    </form>
+
+
+
+
+</body>
+</html>

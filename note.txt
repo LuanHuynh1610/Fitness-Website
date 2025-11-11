@@ -1,10 +1,15 @@
 truy cap moi truong ao
-venv\Scripts\activate 
+venv\Scripts\activate
 
 chay project
 flask run
 
+luu thu vien
+pip freeze > requirements.txt
 
+
+cai thu vien
+pip install -r requirements.txt
 
 
 
