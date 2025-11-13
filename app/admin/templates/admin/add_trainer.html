@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Add Trainer{% endblock %}
+
+{% block content %}
+    <h1>Thêm tài khoản Trainer mới</h1>
+
+    <form method="POST">
+        {{ trainer_form.hidden_tag() }}
+
+        <label>Username</label><br>
+        {{ trainer_form.username(size=30) }}<br><br>
+
+        <label>Email</label><br>
+        {{ trainer_form.email(size=30) }}<br><br>
+
+        <label>Password</label><br>
+        {{ trainer_form.password(size=30) }}<br><br>
+
+        <label>Repeat Password</label><br>
+        {{ trainer_form.password2(size=30) }}<br><br>
+
+        {{ trainer_form.submit() }}
+    </form>
+
+    <br>
+
+{% endblock %}
+

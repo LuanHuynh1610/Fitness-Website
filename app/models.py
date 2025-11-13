@@ -32,6 +32,15 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
+class Class(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.Text)
+    trainer_name = db.Column(db.String(128))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))

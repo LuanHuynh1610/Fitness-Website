@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Trainer Data{% endblock %}
+
+{% block content %}
+<h1>Quản lý Trainer</h1>
+
+    <!-- Nút thêm trainer -->
+    <a href="{{ url_for('admin.add_trainer') }}">
+        <button>Thêm trainer</button>
+    </a>
+
+    <br><br>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Hành động</th>
+        </tr>
+
+        {% for trainer in trainers %}
+        <tr>
+            <td>{{ trainer.id }}</td>
+            <td>{{ trainer.username }}</td>
+            <td>{{ trainer.email }}</td>
+            <td>{{ trainer.role }}</td>
+            <td>
+                
+                <a href="{{ url_for('admin.delete_trainer', trainer_id=trainer.id) }}">
+                    <button style="background:red;color:white;">Xóa</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+{% endblock %}
+    
+

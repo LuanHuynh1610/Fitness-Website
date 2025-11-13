@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Chào mừng đến với Dashboard!</h1>
+{% extends "base.html" %}
+{% block title %}Admin Class Manage{% endblock %}
 
-    <p>Đây là trang tổng quan cho người dùng của bạn.</p>
+{% block content %}
+    <h1>Dashboard!</h1>
 
     <h2>Thông tin tài khoản</h2>
     <ul>
@@ -19,11 +14,8 @@
     <h2>Tùy chọn</h2>
     <ul>
         <li><a href="{{ url_for('main.index') }}">Trang chủ</a></li>
-        <li><a href="{{ url_for('auth.logout') }}">Đăng xuất</a></li>
-        <li><a href="#">Quản lý bài tập</a></li>
+        <li><a href="#">Lớp của bạn</a></li>
         <li><a href="#">Lịch huấn luyện</a></li>
     </ul>
 
-    <p>Thêm các chức năng khác tại đây.</p>
-</body>
-</ht
+{% endblock %}

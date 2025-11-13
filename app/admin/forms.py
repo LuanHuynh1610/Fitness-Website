@@ -23,3 +23,23 @@ class CreateAdminForm(FlaskForm):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError("Email already registered.")
+
+
+class CreateTrainerForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    password2 = PasswordField(
+        "Repeat Password", validators=[DataRequired(), EqualTo("password")]
+    )
+    submit = SubmitField("Create Trainer")
+
+    def validate_username(self, username):
+        user = db.session.scalar(sa.select(User).where(User.username == username.data))
+        if user is not None:
+            raise ValidationError("Username already exists.")
+
+    def validate_email(self, email):
+        user = db.session.scalar(sa.select(User).where(User.email == email.data))
+        if user is not None:
+            raise ValidationError("Email already registered.")

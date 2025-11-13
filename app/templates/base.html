@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <nav style="background-color: #f4f4f4; padding: 10px;">
+    <a href="{{ url_for('main.dashboard') }}">Home</a>
+
+    {% if current_user.is_authenticated %}
+    <div style="float: right;">
+        <span>Xin chào, {{ current_user.username }} | </span>
+        <a href="{{ url_for('main.profile') }}">Profile</a> |
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+    {% endif %}
+</nav>
+
+<div style="clear: both;"></div>
+  <div class="container">
+    <!-- Nút quay lại -->
+    <button onclick="window.history.back()" class="btn-back">⬅ Quay lại</button>
+
+    <!-- Nội dung riêng của mỗi trang -->
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

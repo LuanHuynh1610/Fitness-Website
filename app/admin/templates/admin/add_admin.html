@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Add</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Admin{% endblock %}
+
+{% block content %}
     <h1>Thêm tài khoản Admin mới</h1>
 
     <form method="POST">
@@ -26,8 +24,6 @@
     </form>
 
     <br>
-    <a href="{{ url_for('admin.manage_admin') }}">Quay lại</a>
 
+{% endblock %}
 
-</body>
-</html>

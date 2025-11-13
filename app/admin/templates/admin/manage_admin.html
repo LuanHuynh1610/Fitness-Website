@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
-</head>
-<body>
-    <h1>Quản lý Admin</h1>
+{% extends "base.html" %}
+
+{% block title %}Admin Data{% endblock %}
+
+{% block content %}
+<h1>Quản lý Admin</h1>
 
     <!-- Nút thêm admin -->
     <a href="{{ url_for('admin.add_admin') }}">
@@ -40,6 +38,6 @@
 
     </table>
 
+{% endblock %}
+    
 
-</body>
-</ht

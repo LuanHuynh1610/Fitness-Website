@@ -11,9 +11,10 @@ pip freeze > requirements.txt
 cai thu vien
 pip install -r requirements.txt
 
-
-
-
+lenh db
+flask db init
+flask db migrate -m ""
+flask db upgrade
 
 
 

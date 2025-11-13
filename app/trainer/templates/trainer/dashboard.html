@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Chào mừng {{ current_user.username }}!</h2>
+  <p>Đây là trang quản lý của Trainer.</p>
+  <a href="{{ url_for('trainer.manage_classes') }}" class="btn btn-primary">Quản lý lớp của tôi</a>
+</div>
+{% endblock %}
