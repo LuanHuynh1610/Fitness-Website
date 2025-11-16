@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Đăng ký lớp học{% endblock %}
+
+{% block content %}
+<h1>Danh sách lớp học</h1>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>ID</th>
+        <th>Tên lớp</th>
+        <th>Mô tả</th>
+        <th>Trainer</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
+        <th>Hành động</th>
+    </tr>
+
+    {% for c in classes %}
+    <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.description }}</td>
+        <td>{{ c.trainer_name}}</td>
+        <td>{{ c.start_date }}</td>
+        <td>{{ c.end_date }}</td>
+        <td>
+            <a href="{{ url_for('user.register_class', class_id=c.id) }}">
+                <button>Đăng ký</button>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div style="margin-top:20px; color:green;">
+            {% for msg in messages %}
+                <p>{{ msg }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+<a href="{{ url_for('user.dashboard') }}">Trang chủ</a>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Admin Class Manage{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Quản lý lớp học</h2>
+
+    <div class="text-end mb-3">
+        <a href="{{ url_for('admin.add_class') }}" class="btn btn-success">Thêm lớp học</a>
+    </div>
+
+    <table class="table table-bordered table-striped" border="1" cellpadding="8" cellspacing="0">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Tên lớp</th>
+                <th>Mô tả</th>
+                <th>Trainer</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in classes %}
+            <tr>
+                <td>{{ class.id }}</td>
+                <td>{{ class.name }}</td>
+                <td>{{ class.description }}</td>
+                <td>{{ class.trainer_name }}</td>
+                <td>{{ class.start_date or '' }}</td>
+                <td>{{ class.end_date or '' }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_class', class_id=class.id) }}" class="btn btn-warning btn-sm" style="background:gray;color:black;">Sửa</a>
+                    <a href="{{ url_for('admin.delete_class', class_id=class.id) }}" class="btn btn-danger btn-sm" style="background:red;color:white;">Xóa</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">Chưa có lớp học nào.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

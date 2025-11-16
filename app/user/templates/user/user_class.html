@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Lớp học của tôi{% endblock %}
+
+{% block content %}
+<h1>Các lớp học bạn đã đăng ký</h1>
+
+{% if classes %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>ID lớp</th>
+        <th>Tên lớp</th>
+        <th>Mô tả</th>
+        <th>Trainer</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
+        <th>Số học viên đã đăng ký</th>
+        <th>Hành động</th>
+    </tr>
+
+    {% for item in classes %}
+    <tr>
+        <td>{{ item.class.id }}</td>
+        <td>{{ item.class.name }}</td>
+        <td>{{ item.class.description }}</td>
+        <td>{{ item.class.trainer_name }}</td>
+        <td>{{ item.class.start_date }}</td>
+        <td>{{ item.class.end_date }}</td>
+        <td>{{ item.count }}/10</td>
+        <td>
+            <form method="POST" action="{{ url_for('user.cancel_class', class_id=item.class.id) }}">
+                <button style="background:red; color:white;">Hủy lớp</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p>Bạn chưa đăng ký lớp nào.</p>
+{% endif %}
+
+<a href="{{ url_for('user.dashboard') }}">Trang chủ</a>
+{% endblock %}

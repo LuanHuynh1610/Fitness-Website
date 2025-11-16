@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Thông báo{% endblock %}
+
+{% block content %}
+   
+    <h2>Thông báo</h2>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>Nội dung</th>
+            <th>Thời gian</th>
+        </tr>
+
+        {% for n in notes %}
+        <tr>
+            <td>{{ n.message }}</td>
+            <td>{{ n.timestamp_vn.strftime("%d-%m-%Y lúc %H:%M") }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}

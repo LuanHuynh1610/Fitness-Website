@@ -4,7 +4,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from typing import Optional
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime, timedelta
 class Role:
     ADMIN = 'admin'
     TRAINER = 'trainer'
@@ -32,14 +32,41 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
+class Class(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.Text)
+    trainer_name = db.Column(db.String(128))
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+
+class UserClass(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'))
+
+
+
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
 
 
 
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(255), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @property
+    def timestamp_vn(self):
+        """Trả về thời gian theo giờ Việt Nam (UTC+7)."""
+        return self.timestamp + timedelta(hours=7)
+    
 
+    
 
 
 

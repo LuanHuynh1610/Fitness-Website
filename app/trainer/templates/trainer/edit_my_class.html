@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Chỉnh sửa lớp: {{ cls.name }}</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label>Tên lớp</label>
+      <input type="text" class="form-control" name="name" value="{{ cls.name }}">
+    </div>
+    <div class="mb-3">
+      <label>Mô tả</label>
+      <textarea class="form-control" name="description">{{ cls.description }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label>Ngày bắt đầu</label>
+      <input type="date" class="form-control" name="start_date" value="{{ cls.start_date }}">
+    </div>
+    <div class="mb-3">
+      <label>Ngày kết thúc</label>
+      <input type="date" class="form-control" name="end_date" value="{{ cls.end_date }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <a href="{{ url_for('trainer.manage_classes') }}" class="btn btn-secondary">Hủy</a>
+  </form>
+</div>
+{% endblock %}

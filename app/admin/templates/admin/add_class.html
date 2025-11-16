@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Admin Add Class{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Thêm lớp học mới</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Tên lớp *</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Giáo viên phụ trách</label>
+            <input type="text" name="trainer_name" class="form-control">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày bắt đầu</label>
+                <input type="date" name="start_date" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ngày kết thúc</label>
+                <input type="date" name="end_date" class="form-control">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+</div>
+{% endblock %}

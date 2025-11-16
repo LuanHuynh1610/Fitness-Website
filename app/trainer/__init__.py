@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-bp = Blueprint('trainer', __name__)
+bp = Blueprint('trainer', __name__, template_folder='templates')
 
 from app.trainer import routes  # import các route sau khi tạo blueprint

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Thông tin cá nhân{% endblock %}
+
+{% block content %}
+<h1>Thông tin cá nhân</h1>
+
+
+
+<!-- Hiển thị thông tin hiện tại -->
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr><th>Username</th><td>{{ user.username }}</td></tr>
+    <tr><th>Email</th><td>{{ user.email }}</td></tr>
+    <tr><th>Role</th><td>{{ user.role }}</td></tr>
+</table>
+
+<hr>
+
+<h2>Chỉnh sửa thông tin</h2>
+
+<form method="POST">
+    <label>Username mới:</label><br>
+    <input type="text" name="username" value="{{ user.username }}"><br><br>
+
+    <label>Email mới:</label><br>
+    <input type="email" name="email" value="{{ user.email }}"><br><br>
+
+    <label>Mật khẩu mới (để trống nếu không đổi):</label><br>
+    <input type="password" name="new_password"><br><br>
+
+    <label>Mật khẩu hiện tại (bắt buộc để xác nhận):</label><br>
+    <input type="password" name="current_password" required><br><br>
+
+    <button type="submit">Cập nhật</button>
+</form>
+    {% if message %}
+        {% if message_type == "error" %}
+            <p style="color:red; font-weight:bold;">{{ message }}</p>
+        {% elif message_type == "success" %}
+            <p style="color:green; font-weight:bold;">{{ message }}</p>
+        {% endif %}
+    {% endif %}
+<br>
+<a href="{{ url_for('main.dashboard') }}">
+    <button>Quay lại Dashboard</button>
+</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Admin Delete Class{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h3>Bạn có chắc muốn xóa lớp: "{{ class_to_delete.name }}" không?</h3>
+    <p>Thao tác này không thể hoàn tác.</p>
+
+    <form method="POST">
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a href="{{ url_for('admin.manage_classes') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

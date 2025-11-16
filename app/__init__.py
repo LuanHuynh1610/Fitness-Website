@@ -30,5 +30,8 @@ def create_app():
 
     from app.trainer import bp as trainer_bp
     app.register_blueprint(trainer_bp, url_prefix='/trainer')
+    
+    from app.user import bp as user_bp
+    app.register_blueprint(user_bp, url_prefix='/user')
 
     return app

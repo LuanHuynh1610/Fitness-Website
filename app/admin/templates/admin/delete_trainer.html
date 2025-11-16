@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Delete{% endblock %}
+{% block title %}Trainer Delete{% endblock %}
 
 {% block content %}
-    <h1>Xóa tài khoản admin</h1>
+    <h1>Xóa tài khoản trainer</h1>
 
-    <p>Bạn có chắc muốn xóa admin: <strong>{{ admin.username }}</strong>?</p>
+    <p>Bạn có chắc muốn xóa trainer: <strong>{{ trainer.username }}</strong>?</p>
 
     <form method="POST">
         <button type="submit" style="background:red;color:white;">Xóa</button>
-        <a href="{{ url_for('admin.manage_admin') }}">
+        <a href="{{ url_for('admin.manage_trainers') }}">
             <button type="button">Hủy</button>
         </a>
     </form>
