@@ -6,7 +6,7 @@ from app.models import User
 from app import db
 from app.models import Class
 from datetime import datetime
-
+from app.models import Notification
 # decorator kiểm tra quyền admin
 def admin_required(func):
     def wrapper(*args, **kwargs):
@@ -235,3 +235,9 @@ def delete_trainer(trainer_id):
 def manage_users():
     return render_template('admin/manage_users.html')
 
+@bp.route('/notifications')
+@login_required
+@admin_required
+def notifications():
+    notes = Notification.query.order_by(Notification.timestamp.desc()).all()
+    return render_template('admin/notifications.html', notes=notes)

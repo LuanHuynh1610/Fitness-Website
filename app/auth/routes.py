@@ -29,7 +29,7 @@ def login():
         elif user.role == "trainer":
             return redirect(url_for('trainer.dashboard'))  
         else:
-            return redirect(url_for('main.dashboard')) 
+            return redirect(url_for('user.dashboard')) 
     return render_template('auth/login.html', form=form)
 
 
