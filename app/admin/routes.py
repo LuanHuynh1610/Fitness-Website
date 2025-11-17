@@ -7,6 +7,8 @@ from app import db
 from app.models import Class
 from datetime import datetime
 from app.models import Notification, Message
+import qrcode, os, secrets
+from flask import current_app
 
 # decorator kiểm tra quyền admin
 def admin_required(func):
@@ -386,7 +388,29 @@ def stats():
         count_class=count_class
     )
 
+@bp.route('/qr')
+@login_required
+def qr_home():
+    trainers = User.query.filter_by(role='trainer').all()
+    return render_template('admin/qr_home.html', trainers=trainers)
 
+@bp.route('/generate_qr/<int:trainer_id>')
+@login_required
+@admin_required
+def generate_qr(trainer_id):
+    trainer = User.query.get_or_404(trainer_id)
+    if not trainer.qr_secret:
+        trainer.qr_secret = secrets.token_hex(16)
+        db.session.commit()
+    qr_string = f"checkin:{trainer.id}:{trainer.qr_secret}"
+    img = qrcode.make(qr_string)
+    rel_path = f"qr/trainer_{trainer.id}.png"          # relative to static/
+    abs_path = os.path.join(current_app.static_folder, rel_path)
+    os.makedirs(os.path.dirname(abs_path), exist_ok=True)
+    img.save(abs_path)
+    # trả template với trainers và img_rel
+    trainers = User.query.filter_by(role='trainer').all()
+    return render_template('admin/generate_qr.html', trainers=trainers, img_rel=rel_path)
 
 
 

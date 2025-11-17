@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Quét QR Check-in{% endblock %}
+
+{% block content %}
+<h2>Quét mã QR Check-in / Check-out</h2>
+
+<div id="qr-reader" style="width: 400px;"></div>
+<p id="result" style="font-size: 20px; font-weight: bold; margin-top: 15px;"></p>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+function onScanSuccess(qrMessage) {
+    // Dừng quét sau lần đầu tiên
+    html5QrCode.stop().then(ignore => {
+        document.getElementById("result").innerText = "Đang kiểm tra...";
+        
+        fetch("/trainer/check_qr", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ qr: qrMessage })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("result").innerText = data.message;
+        })
+        .catch(err => {
+            document.getElementById("result").innerText = "Lỗi hệ thống";
+        });
+    });
+}
+
+const html5QrCode = new Html5Qrcode("qr-reader");
+
+Html5Qrcode.getCameras().then(devices => {
+    if (devices.length > 0) {
+        html5QrCode.start(
+            devices[0].id,
+            {
+                fps: 100,
+                qrbox: { width: 250, height: 250 }
+            },
+            onScanSuccess
+        );
+    } else {
+        document.getElementById("result").innerText = "Không tìm thấy camera";
+    }
+});
+</script>
+
+<a href="{{ url_for('trainer.dashboard') }}">Quay lại</a>
+{% endblock %}

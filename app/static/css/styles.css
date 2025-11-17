@@ -1,0 +1,52 @@
+button[type="submit"], 
+.btn-primary {
+    background-color: #007bff; /* Xanh chuẩn Bootstrap */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button[type="submit"]:hover,
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Nút Delete / Danger */
+.btn-delete, 
+button.delete {
+    background-color: #dc3545; /* Đỏ cảnh báo */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-delete:hover,
+button.delete:hover {
+    background-color: #b02a37;
+}
+
+
+.menu-links li {
+    list-style: none;
+    margin: 8px 0;
+}
+
+.menu-links a {
+    display: inline-block;
+    background: #3dff6e;
+    color: black;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu-links a:hover {
+    background: #0056b3;
+}

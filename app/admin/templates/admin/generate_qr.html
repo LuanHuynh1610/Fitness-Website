@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Tạo QR Code cho Trainer{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Tạo / Hiển thị QR Code cho Trainer</h2>
+
+  <p>Chọn trainer bên dưới và nhấn <strong>Generate QR</strong> để tạo hoặc hiển thị mã QR của trainer đó.</p>
+
+  <div class="mb-3">
+    <label class="form-label">Chọn Trainer</label>
+    <select id="trainerSelect" class="form-select">
+      <option value="">-- Chọn giáo viên --</option>
+      {% for trainer in trainers %}
+      <option value="{{ trainer.id }}">{{ trainer.username }} ({{ trainer.email }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <!-- nút sẽ redirect tới route /admin/generate_qr/<trainer_id> -->
+    <button id="genBtn" class="btn btn-primary" onclick="generateQR()">Generate QR</button>
+  </div>
+
+  <hr>
+
+  <div id="qrArea">
+    {% if img_rel %}
+      <!-- img_rel ví dụ: "qr/trainer_12.png" -->
+      <h4>QR hiện có:</h4>
+      <img src="{{ url_for('static', filename=img_rel) }}" alt="QR code" style="max-width:320px; border:1px solid #ddd; padding:8px;">
+      <p><a href="{{ url_for('static', filename=img_rel) }}" target="_blank">Mở ảnh QR riêng</a></p>
+    {% elif img_url %}
+      <h4>QR hiện có:</h4>
+      <img src="{{ img_url }}" alt="QR code" style="max-width:320px; border:1px solid #ddd; padding:8px;">
+    {% else %}
+      <p>Chưa có QR hiển thị. Tạo QR để hiển thị ở đây.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+function generateQR() {
+  const sel = document.getElementById('trainerSelect');
+  const trainerId = sel.value;
+  if (!trainerId) {
+    alert('Vui lòng chọn 1 trainer.');
+    return;
+  }
+
+  // Mặc định route generate ở server là: /admin/generate_qr/<trainer_id>
+  // Chuyển hướng tới route đó (GET) để server tạo QR và trả về template có img_rel/img_url
+  window.location.href = `/admin/generate_qr/${trainerId}`;
+}
+</script>
+{% endblock %}

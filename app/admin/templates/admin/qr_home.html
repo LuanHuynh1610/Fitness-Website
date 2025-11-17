@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <h2>Tạo QR cho Trainer</h2>
+
+    <form method="GET" action="{{ url_for('admin.generate_qr', trainer_id=0) }}">
+        <select name="trainer_id" onchange="window.location.href='/admin/generate_qr/' + this.value">
+            <option value="">-- chọn trainer --</option>
+            {% for t in trainers %}
+                <option value="{{ t.id }}">{{ t.username }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+
+{% endblock %}
+
+

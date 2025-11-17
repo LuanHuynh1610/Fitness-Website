@@ -12,6 +12,7 @@
         <th>Trainer</th>
         <th>Ngày bắt đầu</th>
         <th>Ngày kết thúc</th>
+        <th>Lịch học</th>
         <th>Hành động</th>
     </tr>
 
@@ -24,8 +25,15 @@
         <td>{{ c.start_date }}</td>
         <td>{{ c.end_date }}</td>
         <td>
+            {% if c.schedule %}
+                {{ c.schedule.replace(",", ", ") }}
+            {% else %}
+                Chưa có lịch
+            {% endif %}
+        </td>
+        <td>
             <a href="{{ url_for('user.register_class', class_id=c.id) }}">
-                <button>Đăng ký</button>
+                <button class="btn-primary">Đăng ký</button>
             </a>
         </td>
     </tr>

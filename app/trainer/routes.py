@@ -1,8 +1,8 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user
 from app import db
-from app.models import Class, User
-from datetime import datetime
+from app.models import Class, User, CheckInLog
+from datetime import datetime, timedelta
 from app.trainer import bp
 
 # Yêu cầu đăng nhập và đúng role
@@ -55,3 +55,46 @@ def edit_class(id):
         flash('Cập nhật lớp thành công!')
         return redirect(url_for('trainer.my_classes'))
     return render_template('trainer/edit_my_class.html', cls=cls)
+
+
+@bp.route("/check_qr", methods=["POST"])
+def check_qr():
+    data = request.json.get("qr", "")
+    
+    try:
+        tag, trainer_id, secret = data.split(":")
+    except:
+        return jsonify({"message": "QR không hợp lệ!"})
+
+    if tag != "checkin":
+        return jsonify({"message": "Sai định dạng QR!"})
+
+    trainer = User.query.get(trainer_id)
+    if not trainer or trainer.qr_secret != secret:
+        return jsonify({"message": "QR không thuộc về trainer này!"})
+
+    now = datetime.utcnow()
+    last_log = CheckInLog.query.filter_by(trainer_id=trainer.id).order_by(CheckInLog.id.desc()).first()
+
+    if not last_log or now - last_log.timestamp > timedelta(seconds=30):
+        log = CheckInLog(trainer_id=trainer.id, status="checkin")
+    else:
+        log = CheckInLog(trainer_id=trainer.id, status="checkout")
+
+    db.session.add(log)
+    db.session.commit()
+
+    msg = "✔ Check-in thành công!" if log.status == "checkin" else "✔ Check-out thành công!"
+    return jsonify({"message": msg})
+
+
+
+@bp.route("/scan_qr")
+def scan_qr():
+    return render_template("trainer/scan_qr.html")
+
+
+
+
+
+
