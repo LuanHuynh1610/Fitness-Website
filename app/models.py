@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True,unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     role = db.Column(db.String(20), default=Role.MEMBER)
+    qr_secret = db.Column(db.String(64))
 
     def is_admin(self):
         return self.role == Role.ADMIN
@@ -88,7 +89,14 @@ class Message(db.Model):
         return self.timestamp + timedelta(hours=7)
 
 
-
+class CheckInLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    trainer_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    status = db.Column(db.String(10))     # checkin / checkout
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    @property
+    def timestamp_vn(self):
+        return self.timestamp + timedelta(hours=7)
 
 
 

@@ -39,8 +39,8 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ url_for('admin.edit_class', class_id=class.id) }}" class="btn btn-warning btn-sm" style="background:gray;color:black;">Sửa</a>
-                    <a href="{{ url_for('admin.delete_class', class_id=class.id) }}" class="btn btn-danger btn-sm" style="background:red;color:white;">Xóa</a>
+                    <a href="{{ url_for('admin.edit_class', class_id=class.id) }}" class="btn-primary" >Sửa</a>
+                    <a href="{{ url_for('admin.delete_class', class_id=class.id) }}" class="btn-delete">Xóa</a>
                 </td>
             </tr>
             {% else %}
