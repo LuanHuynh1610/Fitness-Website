@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Thống kê hệ thống{% endblock %}
+
+{% block content %}
+<h1>Thống kê hệ thống</h1>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <th>Loại tài khoản / Dữ liệu</th>
+        <th>Số lượng</th>
+    </tr>
+    <tr>
+        <td>Số lượng Admin</td>
+        <td>{{ count_admin }}</td>
+    </tr>
+    <tr>
+        <td>Số lượng Trainer</td>
+        <td>{{ count_trainer }}</td>
+    </tr>
+    <tr>
+        <td>Số lượng User</td>
+        <td>{{ count_user }}</td>
+    </tr>
+    <tr>
+        <td>Số lượng Lớp học</td>
+        <td>{{ count_class }}</td>
+    </tr>
+</table>
+
+<br>
+<a href="{{ url_for('admin.dashboard') }}">Quay lại Dashboard Admin</a>
+{% endblock %}

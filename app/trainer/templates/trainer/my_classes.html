@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Lớp học của tôi{% endblock %}
+
+{% block content %}
+<h1>Lớp học bạn phụ trách</h1>
+
+{% if classes %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>ID</th>
+        <th>Tên lớp</th>
+        <th>Mô tả</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
+        <th>Lịch dạy</th>
+        <th>Hành động</th>
+    </tr>
+
+    {% for class_item in classes %}
+    <tr>
+        <td>{{ class_item.id }}</td>
+        <td>{{ class_item.name }}</td>
+        <td>{{ class_item.description }}</td>
+        <td>{{ class_item.start_date }}</td>
+        <td>{{ class_item.end_date }}</td>
+        <td>
+            {% if class_item.schedule %}
+                {{ class_item.schedule.replace(",", ", ") }}
+            {% else %}
+                Chưa có lịch
+            {% endif %}
+        </td>
+        <td></td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>Bạn chưa được phân công lớp nào.</p>
+{% endif %}
+
+<a href="{{ url_for('trainer.dashboard') }}">Quay lại Dashboard</a>
+{% endblock %}

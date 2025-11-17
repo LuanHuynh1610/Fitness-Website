@@ -8,10 +8,16 @@ from app.main import bp
 def index():
     return render_template('main/index.html')
 
-@bp.route('/dashboard')
+@bp.route('/home')
 @login_required
-def dashboard():
-    return render_template('main/dashboard.html')
+def home():
+    if current_user.role == 'admin':
+        return redirect(url_for('admin.dashboard'))
+    elif current_user.role == 'trainer':
+        return redirect(url_for('trainer.dashboard'))
+    else:
+        return redirect(url_for('user.dashboard'))
+
 
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required

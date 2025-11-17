@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+    <h1>Thêm tài khoản User mới</h1>
+
+    <form method="POST">
+        {{ user_form.hidden_tag() }}
+
+        <label>Username</label><br>
+        {{ user_form.username(size=30) }}<br><br>
+
+        <label>Email</label><br>
+        {{ user_form.email(size=30) }}<br><br>
+
+        <label>Password</label><br>
+        {{ user_form.password(size=30) }}<br><br>
+
+        <label>Repeat Password</label><br>
+        {{ user_form.password2(size=30) }}<br><br>
+
+        {{ user_form.submit() }}
+    </form>
+
+    <br>
+
+{% endblock %}
+

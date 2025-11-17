@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Admin Class Manage{% endblock %}
+{% block title %}User Dashboard{% endblock %}
 
 {% block content %}
     <h1>Dashboard!</h1>
@@ -15,6 +15,7 @@
     <ul>
         <li><a href="{{ url_for('user.regist_class') }}">Đăng ký lớp</a></li>
         <li><a href="{{ url_for('user.user_class') }}">Lớp học của tôi</a></li>
+        <li><a href="{{ url_for('user.inbox') }}">Inbox</a></li>
     </ul>
 
 {% endblock %}

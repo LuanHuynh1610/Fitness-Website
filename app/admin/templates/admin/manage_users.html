@@ -1,8 +1,43 @@
 {% extends "base.html" %}
 
-{% block title %}Admin User{% endblock %}
+{% block title %}User Data{% endblock %}
 
 {% block content %}
+<h1>Quản lý User</h1>
 
+    <!-- Nút thêm user -->
+    <a href="{{ url_for('admin.add_user') }}">
+        <button>Thêm User</button>
+    </a>
+
+    <br><br>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Hành động</th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                
+                <a href="{{ url_for('admin.delete_user', user_id=user.id) }}">
+                    <button style="background:red;color:white;">Xóa</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
 
 {% endblock %}
+    
+

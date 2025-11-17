@@ -24,12 +24,17 @@ def dashboard():
     return render_template('trainer/dashboard.html')
 
 
-@bp.route('/manage_classes')
+@bp.route('/my_classes')
 @login_required
-@trainer_required
-def manage_classes():
+def my_classes():
+    if current_user.role != "trainer":
+        flash("Bạn không có quyền truy cập.", "danger")
+        return redirect(url_for('main.dashboard'))
+
+    # Lấy các lớp mà trainer này phụ trách
     classes = Class.query.filter_by(trainer_name=current_user.username).all()
-    return render_template('trainer/manage_my_classes.html', classes=classes)
+
+    return render_template('trainer/my_classes.html', classes=classes)
 
 
 @bp.route('/edit_class/<int:id>', methods=['GET', 'POST'])
@@ -39,7 +44,7 @@ def edit_class(id):
     cls = Class.query.get_or_404(id)
     if cls.trainer_name != current_user.username:
         flash("Bạn không thể chỉnh sửa lớp của trainer khác.")
-        return redirect(url_for('trainer.manage_classes'))
+        return redirect(url_for('trainer.my_classes'))
 
     if request.method == 'POST':
         cls.name = request.form['name']
@@ -48,5 +53,5 @@ def edit_class(id):
         cls.end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
         db.session.commit()
         flash('Cập nhật lớp thành công!')
-        return redirect(url_for('trainer.manage_classes'))
+        return redirect(url_for('trainer.my_classes'))
     return render_template('trainer/edit_my_class.html', cls=cls)

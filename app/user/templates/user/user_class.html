@@ -14,6 +14,7 @@
         <th>Ngày bắt đầu</th>
         <th>Ngày kết thúc</th>
         <th>Số học viên đã đăng ký</th>
+        <th>Lịch học</th>
         <th>Hành động</th>
     </tr>
 
@@ -26,6 +27,13 @@
         <td>{{ item.class.start_date }}</td>
         <td>{{ item.class.end_date }}</td>
         <td>{{ item.count }}/10</td>
+        <td>
+            {% if item.class.schedule %}
+                {{ item.class.schedule.replace(",", ", ") }}
+            {% else %}
+                Chưa có lịch
+            {% endif %}
+        </td>
         <td>
             <form method="POST" action="{{ url_for('user.cancel_class', class_id=item.class.id) }}">
                 <button style="background:red; color:white;">Hủy lớp</button>

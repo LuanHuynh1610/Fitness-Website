@@ -18,6 +18,7 @@
                 <th>Trainer</th>
                 <th>Bắt đầu</th>
                 <th>Kết thúc</th>
+                <th>Lịch học</th>
                 <th>Thao tác</th>
             </tr>
         </thead>
@@ -30,6 +31,13 @@
                 <td>{{ class.trainer_name }}</td>
                 <td>{{ class.start_date or '' }}</td>
                 <td>{{ class.end_date or '' }}</td>
+                <td>
+                    {% if class.schedule %}
+                        {{ class.schedule.replace(",", ", ") }}
+                    {% else %}
+                        Chưa có lịch
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ url_for('admin.edit_class', class_id=class.id) }}" class="btn btn-warning btn-sm" style="background:gray;color:black;">Sửa</a>
                     <a href="{{ url_for('admin.delete_class', class_id=class.id) }}" class="btn btn-danger btn-sm" style="background:red;color:white;">Xóa</a>
