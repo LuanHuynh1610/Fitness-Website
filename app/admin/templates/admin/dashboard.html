@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Site{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-    <h1>ADMIN SITE</h1>
+    <h1>ADMIN DASHBOARD</h1>
 
 
     <ul>
@@ -12,6 +12,8 @@
         <li><a href="{{ url_for('admin.manage_users') }}">Quản lý người dùng</a></li>
         <li><a href="{{ url_for('admin.manage_trainers') }}">Quản lý trainer</a></li>
         <li><a href="{{ url_for('admin.notifications') }}">Thông báo</a></li>
+        <li><a href="{{ url_for('admin.send_message') }}">Gửi thư</a></li>
+        <li><a href="{{ url_for('admin.stats') }}">Thống kê</a></li>
         <li><a href="{{ url_for('auth.logout') }}">Đăng xuất</a></li>
 
     </ul>

@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Class, UserClass
 from app.user import bp
-from app.models import Notification
+from app.models import Notification, Message
+
 
 @bp.route('/dashboard')
 @login_required
@@ -96,6 +97,11 @@ def cancel_class(class_id):
     flash("Hủy lớp thành công!")
     return redirect(url_for('user.user_class'))
 
+@bp.route('/inbox')
+@login_required
+def inbox():
+    messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.timestamp.desc()).all()
+    return render_template('user/inbox.html', messages=messages)
 
 
 

@@ -6,7 +6,8 @@ from app.models import User
 from app import db
 from app.models import Class
 from datetime import datetime
-from app.models import Notification
+from app.models import Notification, Message
+
 # decorator kiểm tra quyền admin
 def admin_required(func):
     def wrapper(*args, **kwargs):
@@ -16,6 +17,11 @@ def admin_required(func):
         return func(*args, **kwargs)
     wrapper.__name__ = func.__name__
     return wrapper
+
+@bp.route('/')
+@login_required
+def dashboard():
+    return render_template('admin/dashboard.html')
 
 
 # Trang quản lý admin
@@ -64,10 +70,7 @@ def delete_admin(admin_id):
 
     return render_template('admin/delete_admin.html', admin=admin)
 
-@bp.route('/')
-@login_required
-def dashboard():
-    return render_template('admin/dashboard.html')
+
 
 
 
@@ -81,32 +84,47 @@ def manage_classes():
 @bp.route('/add_class', methods=['GET', 'POST'])
 @login_required
 def add_class():
+
+    trainers = User.query.filter_by(role='trainer').all()
+
     if request.method == 'POST':
         name = request.form.get('name')
         description = request.form.get('description')
-        trainer_name = request.form.get('trainer_name')
+
+        trainer_id = request.form.get('trainer_id')
+
         start_date_str = request.form.get('start_date')
         end_date_str = request.form.get('end_date')
 
-        if not name:
-            flash('Tên lớp không được để trống!')
-            return redirect(url_for('admin.add_class'))
-        
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d").date() if start_date_str else None
         end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date() if end_date_str else None
+
+        trainer = User.query.get(trainer_id)
+        trainer_name = trainer.username if trainer else None
+
+        # --- NEW: lấy thời khóa biểu ---
+        selected_slots = request.form.getlist('schedule')  # danh sách buổi học
+        schedule_json = ",".join(selected_slots)  # lưu dạng: "Thứ 3|7h-9h,Thứ 5|16h-18h"
+
         new_class = Class(
             name=name,
             description=description,
             trainer_name=trainer_name,
-            start_date=start_date ,
-            end_date=end_date
+            start_date=start_date,
+            end_date=end_date,
+            schedule=schedule_json
         )
+
         db.session.add(new_class)
         db.session.commit()
         flash('Đã thêm lớp học mới thành công!')
+        
         return redirect(url_for('admin.manage_classes'))
 
-    return render_template('admin/add_class.html')
+    return render_template('admin/add_class.html', trainers=trainers)
+
+
+
 
 # --- Xóa lớp học ---
 @bp.route('/delete_class/<int:class_id>', methods=['GET', 'POST'])
@@ -126,12 +144,19 @@ def delete_class(class_id):
 def edit_class(class_id):
     class_item = Class.query.get_or_404(class_id)
 
+    # Lấy danh sách trainer
+    trainers = User.query.filter_by(role='trainer').all()
+
     if request.method == 'POST':
         class_item.name = request.form['name']
         class_item.description = request.form['description']
-        class_item.trainer_name = request.form['trainer_name']
 
-        # Lấy và chuyển đổi ngày
+        # Lấy trainer từ ID
+        trainer_id = request.form.get('trainer_id')
+        trainer = User.query.get(trainer_id)
+        class_item.trainer_name = trainer.username if trainer else None
+
+        # Xử lý ngày tháng
         start_date_str = request.form.get('start_date')
         end_date_str = request.form.get('end_date')
 
@@ -142,18 +167,19 @@ def edit_class(class_id):
                 class_item.end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
         except ValueError:
             flash("Ngày nhập không hợp lệ. Vui lòng nhập đúng định dạng YYYY-MM-DD.", "danger")
-            return redirect(url_for('edit_class', class_id=class_id))
+            return redirect(url_for('admin.edit_class', class_id=class_id))
 
-        # Kiểm tra logic ngày (nếu có)
+        # Kiểm tra logic ngày
         if class_item.start_date and class_item.end_date and class_item.start_date > class_item.end_date:
             flash("Ngày bắt đầu không được sau ngày kết thúc.", "warning")
-            return redirect(url_for('edit_class', class_id=class_id))
+            return redirect(url_for('admin.edit_class', class_id=class_id))
 
         db.session.commit()
         flash('Cập nhật lớp học thành công!', 'success')
         return redirect(url_for('admin.manage_classes'))
 
-    return render_template('admin/edit_class.html', class_item=class_item)
+    return render_template('admin/edit_class.html', class_item=class_item, trainers=trainers)
+
 
 
 @bp.route('/manage_trainers')
@@ -230,10 +256,80 @@ def delete_trainer(trainer_id):
     return render_template('admin/delete_trainer.html', trainer=trainer)
 
 
+
+
 @bp.route('/manage_users')
 @login_required
+@admin_required
 def manage_users():
-    return render_template('admin/manage_users.html')
+    users = User.query.filter_by(role="user").all()
+    return render_template('admin/manage_users.html', users=users)
+
+
+#Thêm user mới
+@bp.route('/add_user', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_user():
+    user_form = CreateTrainerForm()
+    
+    if user_form.validate_on_submit():
+        # Debug: xem dữ liệu form
+        print("Form data:", {
+            "username": user_form.username.data,
+            "email": user_form.email.data,
+            "password": user_form.password.data
+        })
+        
+        # Kiểm tra username/email tồn tại
+        existing_user = User.query.filter(
+            (User.username == user_form.username.data) | 
+            (User.email == user_form.email.data)
+        ).first()
+        if existing_user:
+            flash("Username hoặc email đã tồn tại!")
+            print("Existing user found:", existing_user.username, existing_user.email)
+            return redirect(url_for('admin.add_user'))
+
+        # Tạo user mới
+        new_user = User(
+            username=user_form.username.data,
+            email=user_form.email.data,
+            role="user"
+        )
+        new_user.set_password(user_form.password.data)
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("User đã được thêm thành công!")
+            print("User added:", new_user.username)
+            return redirect(url_for('admin.manage_users'))
+        except Exception as e:
+            db.session.rollback()
+            flash("Có lỗi xảy ra khi thêm user!")
+            print("Database error:", e)
+
+    else:
+        if request.method == "POST":
+            # Debug: nếu POST mà form không validate
+            print("Form errors:", user_form.errors)
+    
+    return render_template('admin/add_user.html', user_form=user_form)
+
+@bp.route('/delete_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+
+    if request.method == "POST":
+        db.session.delete(user)
+        db.session.commit()
+        flash("Xóa user thành công!")
+        return redirect(url_for('admin.manage_users'))
+
+    return render_template('admin/delete_user.html', user=user)
 
 @bp.route('/notifications')
 @login_required
@@ -241,3 +337,78 @@ def manage_users():
 def notifications():
     notes = Notification.query.order_by(Notification.timestamp.desc()).all()
     return render_template('admin/notifications.html', notes=notes)
+
+
+
+@bp.route('/send_message', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def send_message():
+    users = User.query.all()
+
+    if request.method == 'POST':
+        receiver_id = request.form.get('receiver_id')
+        subject = request.form.get('subject')
+        content = request.form.get('content')
+
+        msg = Message(
+            sender_id=current_user.id,
+            receiver_id=receiver_id,
+            subject=subject,
+            content=content
+        )
+        db.session.add(msg)
+        db.session.commit()
+
+        flash("Gửi thư thành công!")
+        return redirect(url_for('admin.send_message'))
+
+    return render_template('admin/send_message.html', users=users)
+
+
+@bp.route('/stats')
+@login_required
+@admin_required
+def stats():
+    # Đếm số lượng các loại tài khoản
+    count_admin = User.query.filter_by(role='admin').count()
+    count_trainer = User.query.filter_by(role='trainer').count()
+    count_user = User.query.filter_by(role='user').count()
+
+    # Đếm số lượng lớp học
+    count_class = Class.query.count()
+
+    return render_template(
+        'admin/stats.html',
+        count_admin=count_admin,
+        count_trainer=count_trainer,
+        count_user=count_user,
+        count_class=count_class
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

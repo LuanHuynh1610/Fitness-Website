@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Hộp thư{% endblock %}
+
+{% block content %}
+<h1>Hộp thư đến</h1>
+
+{% if messages %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Người gửi</th>
+        <th>Tiêu đề</th>
+        <th>Nội dung</th>
+        <th>Thời gian</th>
+    </tr>
+
+    {% for m in messages %}
+    <tr>
+        <td>{{ m.sender.username }}</td>
+        <td>{{ m.subject }}</td>
+        <td>{{ m.content }}</td>
+        <td>{{ m.timestamp.strftime('%d-%m-%Y %H:%M') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>Không có thư nào.</p>
+{% endif %}
+
+{% endblock %}
